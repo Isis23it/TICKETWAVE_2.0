@@ -13,7 +13,9 @@ return new class extends Migration
             $table->string('name', 150);
             $table->string('city', 100);
             $table->string('state', 100);
+            $table->string('neighborhood', 100)->nullable();
             $table->string('country', 100)->default('México');
+            $table->string('postal_code', 10)->nullable();
             $table->string('address')->nullable();
             $table->unsignedInteger('capacity');
             $table->decimal('latitude', 10, 7)->nullable();

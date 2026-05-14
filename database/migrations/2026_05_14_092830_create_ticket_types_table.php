@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedInteger('quantity_available');
             $table->unsignedInteger('quantity_sold')->default(0);
-            // decimal para evitar errores de redondeo en precios
             $table->decimal('price', 10, 2);
             $table->unsignedTinyInteger('max_per_order')->nullable();
             $table->timestamps();

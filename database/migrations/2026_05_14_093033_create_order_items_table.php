@@ -17,7 +17,6 @@ return new class extends Migration
                   ->constrained('ticket_types')
                   ->onDelete('cascade');
             $table->unsignedInteger('quantity');
-            // precio guardado al momento de la compra
             $table->decimal('unit_price', 10, 2);
             $table->timestamps();
         });

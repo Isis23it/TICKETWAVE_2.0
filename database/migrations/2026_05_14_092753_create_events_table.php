@@ -18,9 +18,9 @@ return new class extends Migration
                   ->onDelete('cascade');
             $table->string('name', 200);
             $table->text('description')->nullable();
-            $table->enum('category', ['concert', 'sport', 'theater', 'other']);
+            $table->string('category', 100);
             $table->string('image_url')->nullable();
-            $table->enum('status', ['draft', 'published', 'cancelled'])->default('draft');
+            $table->string('status', 50)->default('draft');
             $table->dateTime('event_date');
             $table->timestamps();
         });
