@@ -13,7 +13,7 @@ Plataforma de venta y gestión de boletos para eventos en vivo.
 
 ## Stack
 
-- Laravel 11 + Filament
+- Laravel 13 + Filament 5
 - MySQL 8
 - Docker + Docker Compose
 - Livewire
