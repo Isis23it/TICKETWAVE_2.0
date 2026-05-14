@@ -6,7 +6,7 @@
 
 # Primera vez — clonar el repo y correr esto:
 setup:
-	cp .env.example .env
+	copy .env.example .env
 	docker compose up -d --build
 	docker compose exec app composer install
 	docker compose exec app php artisan key:generate
