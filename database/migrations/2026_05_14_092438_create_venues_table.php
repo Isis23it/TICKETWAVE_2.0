@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('postal_code', 10)->nullable();
             $table->string('address')->nullable();
             $table->unsignedInteger('capacity');
+            // decimal para evitar errores de redondeo en coordenadas
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('image_url')->nullable();

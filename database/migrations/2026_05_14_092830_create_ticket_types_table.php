@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('ticket_types', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra el evento, sus tipos de entrada también
             $table->foreignId('event_id')
                   ->constrained('events')
                   ->onDelete('cascade');
@@ -17,7 +18,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedInteger('quantity_available');
             $table->unsignedInteger('quantity_sold')->default(0);
+            // decimal para evitar errores de redondeo en precios
             $table->decimal('price', 10, 2);
+            // null significa sin límite de boletos por compra
             $table->unsignedTinyInteger('max_per_order')->nullable();
             $table->timestamps();
         });

@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra la orden, su pago también
             $table->foreignId('order_id')
                   ->constrained('orders')
                   ->onDelete('cascade');
             $table->string('payment_method', 100);
             $table->string('status', 50)->default('pending');
+            // id externo del procesador de pagos
             $table->string('transaction_id')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->timestamps();

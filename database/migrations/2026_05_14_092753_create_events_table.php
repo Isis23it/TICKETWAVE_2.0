@@ -10,9 +10,11 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra el usuario, sus eventos también
             $table->foreignId('user_id')
                   ->constrained('users')
                   ->onDelete('cascade');
+            // cascade: si se borra el venue, sus eventos también
             $table->foreignId('venue_id')
                   ->constrained('venues')
                   ->onDelete('cascade');
