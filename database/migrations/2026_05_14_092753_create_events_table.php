@@ -10,17 +10,19 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra el usuario, sus eventos también
             $table->foreignId('user_id')
                   ->constrained('users')
                   ->onDelete('cascade');
+            // cascade: si se borra el venue, sus eventos también
             $table->foreignId('venue_id')
                   ->constrained('venues')
                   ->onDelete('cascade');
             $table->string('name', 200);
             $table->text('description')->nullable();
-            $table->enum('category', ['concert', 'sport', 'theater', 'other']);
+            $table->string('category', 100);
             $table->string('image_url')->nullable();
-            $table->enum('status', ['draft', 'published', 'cancelled'])->default('draft');
+            $table->string('status', 50)->default('draft');
             $table->dateTime('event_date');
             $table->timestamps();
         });

@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra el usuario, sus órdenes también
             $table->foreignId('user_id')
                   ->constrained('users')
                   ->onDelete('cascade');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->string('status', 50)->default('pending');
+            // decimal para evitar errores de redondeo en montos
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });

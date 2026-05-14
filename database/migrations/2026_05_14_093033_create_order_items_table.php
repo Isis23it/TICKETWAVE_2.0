@@ -10,9 +10,11 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
+            // cascade: si se borra la orden, sus items también
             $table->foreignId('order_id')
                   ->constrained('orders')
                   ->onDelete('cascade');
+            // cascade: si se borra el tipo de entrada, sus items también
             $table->foreignId('ticket_type_id')
                   ->constrained('ticket_types')
                   ->onDelete('cascade');

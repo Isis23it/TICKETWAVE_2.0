@@ -13,9 +13,12 @@ return new class extends Migration
             $table->string('name', 150);
             $table->string('city', 100);
             $table->string('state', 100);
+            $table->string('neighborhood', 100)->nullable();
             $table->string('country', 100)->default('México');
+            $table->string('postal_code', 10)->nullable();
             $table->string('address')->nullable();
             $table->unsignedInteger('capacity');
+            // decimal para evitar errores de redondeo en coordenadas
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('image_url')->nullable();
