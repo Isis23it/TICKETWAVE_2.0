@@ -92,7 +92,6 @@ class TicketTypesTable
           ->query(fn(Builder $query): Builder => $query->whereColumn('quantity_available', '>', 'quantity_sold')),
       ])
       ->recordActions([
-        ViewAction::make(),
         EditAction::make(),
         DeleteAction::make(),
       ])
