@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TicketTypes;
 
+use App\Filament\Resources\TicketTypes\Widgets\TicketTypeStatsWidget;
 use App\Filament\Resources\TicketTypes\Pages\CreateTicketType;
 use App\Filament\Resources\TicketTypes\Pages\EditTicketType;
 use App\Filament\Resources\TicketTypes\Pages\ListTicketTypes;
@@ -38,6 +39,13 @@ class TicketTypeResource extends Resource
   public static function getNavigationGroup(): ?string
   {
     return 'Principal';
+  }
+
+  public static function getWidgets(): array
+  {
+    return [
+      TicketTypeStatsWidget::class,
+    ];
   }
 
   protected static ?int $navigationSort = 3;
