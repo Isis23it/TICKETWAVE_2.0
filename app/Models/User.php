@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Filament\Exceptions\NoDefaultPanelSetException;
 /**
  * Modelo que representa a un usuario de la plataforma.
  *
@@ -19,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 #[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -50,4 +52,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+    /**
+     * Solo admin y organizer pueden acceder al panel de Filament.
+     * Los compradores reciben 403 al intentar entrar a /admin.
+     */
+public function canAccessPanel(Panel $panel): bool
+{
+    if (!in_array($this->role, ['admin', 'organizer'])) {
+        return false;
+    }
+    return true;
+}
 }
