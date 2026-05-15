@@ -21,7 +21,7 @@ class VenueSeeder extends Seeder
                 'capacity'     => 10000,
                 'latitude'     => 19.4326,
                 'longitude'    => -99.2034,
-                'is_active'    => true,
+                'active'       => true,
             ],
             [
                 'name'         => 'Estadio Azteca',
@@ -34,7 +34,7 @@ class VenueSeeder extends Seeder
                 'capacity'     => 87000,
                 'latitude'     => 19.3029,
                 'longitude'    => -99.1505,
-                'is_active'    => true,
+                'active'       => true,
             ],
             [
                 'name'         => 'Teatro Metropolitán',
@@ -47,7 +47,7 @@ class VenueSeeder extends Seeder
                 'capacity'     => 2000,
                 'latitude'     => 19.4284,
                 'longitude'    => -99.1426,
-                'is_active'    => true,
+                'active'       => true,
             ],
         ];
 

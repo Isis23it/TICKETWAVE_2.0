@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('image_url')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
