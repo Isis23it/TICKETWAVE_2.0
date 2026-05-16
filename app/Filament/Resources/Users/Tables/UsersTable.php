@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Filament\Resources\Users\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Filters\SelectFilter;
+
+class UsersTable
+{
+  public static function configure(Table $table): Table
+  {
+    return $table
+      ->columns([
+        TextColumn::make('name')
+          ->label('Nombre')
+          ->searchable()
+          ->sortable(),
+
+        TextColumn::make('email')
+          ->label('Correo electrónico')
+          ->searchable()
+          ->sortable(),
+
+        TextColumn::make('role')
+          ->label('Rol')
+          ->badge()
+          ->color(fn(string $state): string => match ($state) {
+            'admin'     => 'danger',
+            'organizer' => 'warning',
+            'buyer'     => 'success',
+            default     => 'gray',
+          })
+          ->formatStateUsing(fn(string $state): string => match ($state) {
+            'admin'     => 'Administrador',
+            'organizer' => 'Organizador',
+            'buyer'     => 'Comprador',
+            default     => $state,
+          })
+          ->sortable(),
+
+        TextColumn::make('email_verified_at')
+          ->label('Email verificado')
+          ->dateTime('d/m/Y')
+          ->sortable()
+          ->placeholder('Sin verificar'),
+
+        TextColumn::make('created_at')
+          ->label('Fecha de registro')
+          ->dateTime('d/m/Y H:i')
+          ->sortable(),
+      ])
+      ->defaultSort('created_at', 'desc')
+      ->filters([
+        SelectFilter::make('role')
+          ->label('Filtrar por rol')
+          ->options([
+            'buyer'     => 'Comprador',
+            'organizer' => 'Organizador',
+            'admin'     => 'Administrador',
+          ]),
+      ])
+      ->recordActions([
+        EditAction::make()->label('Editar'),
+      ])
+      ->toolbarActions([
+        BulkActionGroup::make([
+          DeleteBulkAction::make()->label('Eliminar seleccionados'),
+        ]),
+      ])
+      ->emptyStateHeading('Sin usuarios registrados')
+      ->emptyStateDescription('Aún no hay usuarios en la plataforma.')
+      ->emptyStateIcon('heroicon-o-users');
+  }
+}
