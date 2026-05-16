@@ -19,8 +19,6 @@ class Order extends Model
 {
     use HasFactory;
 
-    // ── Relaciones ─────────────────────────────────────────────
-
     /** El comprador que realizó este pedido */
     public function user(): BelongsTo
     {
@@ -29,6 +27,12 @@ class Order extends Model
 
     /** Items de boletos dentro de este pedido */
     public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /** Alias de orderItems para compatibilidad con Filament */
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
