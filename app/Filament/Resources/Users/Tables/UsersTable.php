@@ -9,6 +9,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
+use App\Filament\Resources\Users\Exporters\UserExporter;
+use Filament\Actions\ExportAction;
 
 class UsersTable
 {
@@ -69,6 +71,9 @@ class UsersTable
         DeleteAction::make()->label('Eliminar'),
       ])
       ->toolbarActions([
+        ExportAction::make()
+          ->label('Exportar')
+          ->exporter(UserExporter::class),
         BulkActionGroup::make([
           DeleteBulkAction::make()->label('Eliminar seleccionados'),
         ]),
