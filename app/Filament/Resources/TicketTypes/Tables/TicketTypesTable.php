@@ -14,6 +14,8 @@ use Filament\Tables\Table;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TicketTypes\Exporters\TicketTypeExporter;
+use Filament\Actions\ExportAction;
 
 /**
  * Configuración de la tabla para listar Ticket Types.
@@ -96,6 +98,9 @@ class TicketTypesTable
         DeleteAction::make(),
       ])
       ->toolbarActions([
+        ExportAction::make()
+          ->label('Exportar')
+          ->exporter(TicketTypeExporter::class),
         BulkActionGroup::make([
           DeleteBulkAction::make(),
         ]),
