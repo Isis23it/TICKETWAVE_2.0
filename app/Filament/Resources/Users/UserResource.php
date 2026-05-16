@@ -7,6 +7,7 @@ use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
+use App\Filament\Resources\Users\Widgets\UserStatsWidget;
 use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -33,6 +34,13 @@ class UserResource extends Resource
   public static function getNavigationGroup(): ?string
   {
     return 'Principal';
+  }
+
+  public static function getWidgets(): array
+  {
+    return [
+      UserStatsWidget::class,
+    ];
   }
 
   public static function form(Schema $schema): Schema

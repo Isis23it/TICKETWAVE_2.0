@@ -7,7 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 
 class UsersTable
@@ -32,13 +32,13 @@ class UsersTable
           ->color(fn(string $state): string => match ($state) {
             'admin'     => 'danger',
             'organizer' => 'warning',
-            'buyer'     => 'success',
+            'comprador'     => 'success',
             default     => 'gray',
           })
           ->formatStateUsing(fn(string $state): string => match ($state) {
             'admin'     => 'Administrador',
             'organizer' => 'Organizador',
-            'buyer'     => 'Comprador',
+            'comprador'     => 'Comprador',
             default     => $state,
           })
           ->sortable(),
@@ -59,13 +59,14 @@ class UsersTable
         SelectFilter::make('role')
           ->label('Filtrar por rol')
           ->options([
-            'buyer'     => 'Comprador',
+            'comprador'     => 'Comprador',
             'organizer' => 'Organizador',
             'admin'     => 'Administrador',
           ]),
       ])
       ->recordActions([
         EditAction::make()->label('Editar'),
+        DeleteAction::make()->label('Eliminar'),
       ])
       ->toolbarActions([
         BulkActionGroup::make([
