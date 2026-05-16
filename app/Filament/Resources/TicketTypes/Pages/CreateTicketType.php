@@ -7,5 +7,9 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateTicketType extends CreateRecord
 {
-    protected static string $resource = TicketTypeResource::class;
+  protected static string $resource = TicketTypeResource::class;
+  protected function getRedirectUrl(): string
+  {
+    return $this->getResource()::getUrl('index');
+  }
 }
