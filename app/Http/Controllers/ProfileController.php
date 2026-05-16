@@ -7,13 +7,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
+/**
+ * Gestiona el perfil del usuario autenticado.
+ * Cubre edición de nombre, email, contraseña y avatar.
+ */
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
+    /** Muestra el formulario de edición de perfil */
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -22,7 +25,8 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Actualiza nombre, email y avatar del usuario.
+     * Si cambia el email, se resetea la verificación.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -32,14 +36,40 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        // Subir nuevo avatar si se proporcionó
+        if ($request->hasFile('avatar')) {
+            // Borrar el avatar anterior si existía
+            if ($request->user()->avatar) {
+                Storage::disk('public')->delete($request->user()->avatar);
+            }
+            // Guardar en storage/public/avatars
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $request->user()->avatar = $path;
+        }
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Elimina el avatar del usuario y vuelve a la inicial.
      */
+    public function destroyAvatar(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->avatar) {
+            // Borrar el archivo físico del storage
+            Storage::disk('public')->delete($user->avatar);
+            $user->avatar = null;
+            $user->save();
+        }
+
+        return Redirect::route('profile.edit')->with('status', 'avatar-deleted');
+    }
+
+    /** Elimina la cuenta del usuario */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
@@ -47,11 +77,8 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

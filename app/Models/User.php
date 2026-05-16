@@ -13,13 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Filament\Exceptions\NoDefaultPanelSetException;
+use Illuminate\Support\Facades\Storage;
 /**
  * Modelo que representa a un usuario de la plataforma.
  *
  * Un usuario puede tener rol 'comprador', 'organizer' o 'admin'.
  * Como comprador realiza pedidos, como organizador crea eventos.
  */
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'password', 'role', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -63,4 +64,26 @@ public function canAccessPanel(Panel $panel): bool
     }
     return true;
 }
+// ── Accessors ──────────────────────────────────────────────
+
+    /**
+     * Retorna la URL del avatar o null si no tiene.
+     * Uso: $user->avatar_url → 'https://...' o null
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if ($this->avatar) {
+            return Storage::url($this->avatar);
+        }
+        return null;
+    }
+
+    /**
+     * Retorna la inicial del nombre en mayúscula para el avatar por default.
+     * Uso: $user->initial → 'L'
+     */
+    public function getInitialAttribute(): string
+    {
+        return strtoupper(substr($this->name, 0, 1));
+    }
 }
