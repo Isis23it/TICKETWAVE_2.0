@@ -27,7 +27,7 @@
                         alt="{{ $evento->name }}"
                         class="w-full h-48 object-cover"
                     />
-                    @if($evento->ticketTypes->sum('available') <= 0)
+                    @if($evento->ticketTypes->sum('quantity_available') <= 0)
                         <span class="absolute top-2 right-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-semibold">
                             Agotado
                         </span>
@@ -35,11 +35,11 @@
                 </div>
                 <div class="p-4">
                     <h3 class="text-white font-semibold text-lg mb-1">{{ $evento->name }}</h3>
-                    <p class="text-[#8EB69B] text-sm mb-2">{{ $evento->fecha_evento?->format('d M Y') }}</p>
+                    <p class="text-[#8EB69B] text-sm mb-2">{{ $evento->event_date ? \Carbon\Carbon::parse($evento->event_date)->format('d M Y') : 'Fecha por confirmar' }}</p>
                     <p class="text-[#83D5AB] font-semibold mb-4">
                         Desde ${{ number_format($evento->ticketTypes->min('price') ?? 0, 2) }}
                     </p>
-                    @if($evento->ticketTypes->sum('available') > 0)
+                    @if($evento->ticketTypes->sum('quantity_available') > 0)
                         <button class="w-full bg-[#8EDBB1] text-[#051F20] py-2 rounded-lg font-semibold hover:bg-[#83D5AB] transition">
                             Comprar
                         </button>
@@ -57,4 +57,8 @@
         @endforelse
     </div>
 
-    
+    {{-- Paginación --}}
+    <div class="mt-8">
+        {{ $eventos->links() }}
+    </div>
+</div>
