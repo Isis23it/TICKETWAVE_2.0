@@ -41,7 +41,7 @@ class UserForm
               ->label('Rol')
               ->required()
               ->options([
-                'buyer'     => 'Comprador',
+                'comprador'     => 'Comprador',
                 'organizer' => 'Organizador',
                 'admin'     => 'Administrador',
               ])
