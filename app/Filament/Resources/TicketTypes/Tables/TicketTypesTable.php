@@ -5,7 +5,6 @@ namespace App\Filament\Resources\TicketTypes\Tables;
 
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\Filter;
-use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -29,54 +28,52 @@ class TicketTypesTable
   {
     return $table
       ->columns([
-        TextColumn::make('event.name')
-          ->label('Event')
-          ->sortable()
-          ->searchable()
-          ->weight('font-bold')
-          ->icon('heroicon-o-calendar'),
-
         TextColumn::make('name')
-          ->label('Ticket Type')
+          ->label('Nombre')
           ->searchable()
           ->sortable(),
 
-        TextColumn::make('price')
-          ->label('Price')
-          ->money('USD')
+        TextColumn::make('event.name')
+          ->label('Evento')
           ->sortable()
-          ->alignment('right')
-          ->color('success'),
+          ->searchable()
+          ->icon('heroicon-o-calendar'),
+
+        TextColumn::make('price')
+          ->label('Precio')
+          ->money('MXN')
+          ->sortable()
+          ->alignment('right'),
 
         TextColumn::make('quantity_available')
-          ->label('Available')
+          ->label('Disponibles')
           ->sortable()
           ->alignment('center'),
 
         TextColumn::make('quantity_sold')
-          ->label('Sold')
+          ->label('Vendidos')
           ->sortable()
           ->alignment('center')
           ->color('warning'),
 
         TextColumn::make('stock_remaining')
-          ->label('Stock Left')
+          ->label('Stock restante')
           ->sortable()
           ->alignment('center')
           ->badge()
           ->color(fn(int $state): string => match (true) {
             $state > 10 => 'success',
-            $state > 0 => 'warning',
-            default => 'danger',
+            $state > 0  => 'warning',
+            default     => 'danger',
           }),
 
         IconColumn::make('has_stock')
-          ->label('On Sale')
+          ->label('En venta')
           ->boolean()
           ->alignment('center'),
 
         TextColumn::make('created_at')
-          ->label('Created')
+          ->label('Creado')
           ->dateTime('d/m/Y H:i')
           ->sortable()
           ->toggleable(isToggledHiddenByDefault: true),
@@ -87,26 +84,26 @@ class TicketTypesTable
           ->relationship('event', 'name')
           ->searchable()
           ->preload()
-          ->label('Filter by Event'),
+          ->label('Filtrar por evento'),
 
         Filter::make('in_stock')
-          ->label('Only in stock')
+          ->label('Solo con stock')
           ->query(fn(Builder $query): Builder => $query->whereColumn('quantity_available', '>', 'quantity_sold')),
       ])
       ->recordActions([
-        EditAction::make(),
-        DeleteAction::make(),
+        EditAction::make()->label('Editar'),
+        DeleteAction::make()->label('Eliminar'),
       ])
       ->toolbarActions([
         ExportAction::make()
           ->label('Exportar')
           ->exporter(TicketTypeExporter::class),
         BulkActionGroup::make([
-          DeleteBulkAction::make(),
+          DeleteBulkAction::make()->label('Eliminar seleccionados'),
         ]),
       ])
-      ->emptyStateHeading('No ticket types registered')
-      ->emptyStateDescription('Create the first ticket type for an event.')
+      ->emptyStateHeading('Sin tipos de entrada')
+      ->emptyStateDescription('Crea el primer tipo de entrada para un evento.')
       ->emptyStateIcon('heroicon-o-ticket');
   }
 }

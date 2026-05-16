@@ -31,7 +31,12 @@ class TicketTypeForm
               ->placeholder('Ej. General, VIP, Platino')
               ->required()
               ->maxLength(100)
-              ->unique(ignoreRecord: true)
+              ->unique(
+                table: 'ticket_types',
+                column: 'name',
+                ignoreRecord: true,
+                modifyRuleUsing: fn($rule, Get $get) => $rule->where('event_id', $get('event_id'))
+              )
               ->helperText('Máximo 100 caracteres · visible para el comprador'),
 
             Select::make('event_id')

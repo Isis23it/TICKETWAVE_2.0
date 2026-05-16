@@ -28,7 +28,7 @@ class TicketTypeResource extends Resource
 
   protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-  protected static ?string $recordTitleAttribute = 'TicketType';
+  protected static ?string $recordTitleAttribute = 'name';
 
   protected static ?string $navigationLabel = 'Tipo de entrada';
 
