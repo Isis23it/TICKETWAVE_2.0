@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class OrdersTable
@@ -39,7 +40,15 @@ class OrdersTable
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('Estado')
+                    ->options([
+                        'pending'   => 'Pendiente',
+                        'confirmed' => 'Confirmado',
+                        'cancelled' => 'Cancelado',
+                    ]),
+            ])
             ->recordActions([
                 ViewAction::make(),
             ])

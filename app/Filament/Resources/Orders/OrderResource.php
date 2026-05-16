@@ -21,9 +21,16 @@ class OrderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'status';
+    // Usa el accessor getTitleAttribute() definido en Order.php
+    protected static ?string $recordTitleAttribute = 'title';
 
     protected static ?string $navigationLabel = 'Órdenes';
+
+    // Agrupa el resource en el menú lateral
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Principal';
+    }
 
     public static function form(Schema $schema): Schema
     {

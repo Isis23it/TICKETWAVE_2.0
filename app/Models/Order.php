@@ -19,6 +19,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    // ── Relaciones ─────────────────────────────────────────────
+
     /** El comprador que realizó este pedido */
     public function user(): BelongsTo
     {
@@ -41,5 +43,16 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    // ── Accessors ──────────────────────────────────────────────
+
+    /**
+     * Título legible del pedido para búsqueda global en Filament.
+     * Uso: $order->title → "Orden #1 — Juan Pérez"
+     */
+    public function getTitleAttribute(): string
+    {
+        return "Orden #{$this->id} — {$this->user?->name}";
     }
 }

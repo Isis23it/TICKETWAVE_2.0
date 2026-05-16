@@ -29,7 +29,8 @@ class ViewOrder extends ViewRecord
                 ])
                 ->action(function (array $data): void {
                     $this->record->update(['status' => $data['status']]);
-                    $this->redirect(request()->header('Referer'));
+                    // Redirige a la misma vista del pedido sin usar Referer
+                    $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
                 }),
         ];
     }

@@ -7,14 +7,17 @@ use App\Models\Order;
 class OrderObserver
 {
     /**
-     * Cuando el estado cambia a "cancelled", se devuelven
-     * los boletos — se decrementa quantity_sold sin bajar de 0.
+     * Handle the Order "updated" event.
+     * Usamos updated en lugar de updating para que solo se ejecute
+     * si el guardado en BD fue exitoso.
      */
-    public function updating(Order $order): void
+    public function updated(Order $order): void
     {
-        if ($order->isDirty('status') && $order->status === 'cancelled') {
+        // Verificar si el estado cambió a 'cancelled'
+        if ($order->wasChanged('status') && $order->status === 'cancelled') {
             foreach ($order->items as $item) {
                 $ticketType = $item->ticketType;
+                // Devolver los boletos vendidos (disminuir quantity_sold)
                 $newSold = max(0, $ticketType->quantity_sold - $item->quantity);
                 $ticketType->update(['quantity_sold' => $newSold]);
             }
