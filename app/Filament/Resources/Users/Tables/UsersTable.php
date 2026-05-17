@@ -12,6 +12,7 @@ use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\Users\Exporters\UserExporter;
 use Filament\Actions\ExportAction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 class UsersTable
 {
@@ -78,7 +79,13 @@ class UsersTable
           ->label('Exportar')
           ->exporter(UserExporter::class),
         BulkActionGroup::make([
-          DeleteBulkAction::make()->label('Eliminar seleccionados'),
+          DeleteBulkAction::make()
+            ->label('Eliminar seleccionados')
+            ->action(function (Collection $records): void {
+              $records
+                ->reject(fn($record) => $record->id === Auth::id())
+                ->each->delete();
+            }),
         ]),
       ])
       ->emptyStateHeading('Sin usuarios registrados')
