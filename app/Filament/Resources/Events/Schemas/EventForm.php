@@ -26,18 +26,27 @@ class EventForm
                     ->preload()
                     ->visible(fn () => auth()->user()->role === 'admin')
                     ->default(fn () => auth()->id())
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'El organizador es obligatorio.',
+                    ]),
 
                 Select::make('venue_id')
                     ->label('Recinto')
                     ->relationship('venue', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'El recinto es obligatorio.',
+                    ]),
 
                 TextInput::make('name')
                     ->label('Nombre')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'El nombre del evento es obligatorio.',
+                    ]),
 
                 Textarea::make('description')
                     ->label('Descripción')
@@ -71,7 +80,10 @@ class EventForm
 
                 DateTimePicker::make('event_date')
                     ->label('Fecha del evento')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'La fecha del evento es obligatoria.',
+                    ]),
             ]);
     }
 }

@@ -51,13 +51,21 @@ class EventResource extends Resource
         ];
     }
 
-    /**
-     * Eager loading de venue y user para evitar N+1 queries.
-     */
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->with(['venue', 'user']);
+   
+     /**
+ * Eager loading de venue y user para evitar N+1 queries.
+ * Si es organizador, solo ve sus propios eventos.
+ */
+public static function getEloquentQuery(): Builder
+{
+    $query = parent::getEloquentQuery()->with(['venue', 'user']);
+
+    if (auth()->user()->role === 'organizer') {
+        $query->where('user_id', auth()->id());
     }
+
+    return $query;
+}
 
     public static function form(Schema $schema): Schema
     {

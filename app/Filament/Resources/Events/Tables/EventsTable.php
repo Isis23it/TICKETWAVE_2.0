@@ -65,6 +65,8 @@ class EventsTable
                     }),
             ])
             ->defaultSort('created_at', 'desc')
+            ->paginated([10, 25, 50])
+            ->defaultPaginationPageOption(10)
             ->filters([
                 SelectFilter::make('status')
                     ->label('Estado')
