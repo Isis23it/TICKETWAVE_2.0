@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -12,8 +11,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-use Filament\Exceptions\NoDefaultPanelSetException;
 use Illuminate\Support\Facades\Storage;
+
 /**
  * Modelo que representa a un usuario de la plataforma.
  *
@@ -27,16 +26,11 @@ class User extends Authenticatable implements FilamentUser
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -53,36 +47,53 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Order::class);
     }
-    /**
-     * Solo admin y organizer pueden acceder al panel de Filament.
-     * Los compradores reciben 403 al intentar entrar a /admin.
-     */
-public function canAccessPanel(Panel $panel): bool
-{
-    if (!in_array($this->role, ['admin', 'organizer'])) {
-        return false;
-    }
-    return true;
-}
-// ── Accessors ──────────────────────────────────────────────
+
+    // ── Filament ───────────────────────────────────────────────
 
     /**
-     * Retorna la URL del avatar o null si no tiene.
-     * Uso: $user->avatar_url → 'https://...' o null
+     * Solo admin y organizer pueden acceder al panel de Filament.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return in_array($this->role, ['admin', 'organizer']);
+    }
+
+    // ── Helpers de rol ─────────────────────────────────────────
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isOrganizer(): bool
+    {
+        return $this->role === 'organizer';
+    }
+
+    public function isComprador(): bool
+    {
+        return $this->role === 'comprador';
+    }
+
+    // ── Accessors ──────────────────────────────────────────────
+
+    /**
+     * Retorna la URL pública del avatar o null si no tiene.
+     * Uso: $user->avatar_url
      */
     public function getAvatarUrlAttribute(): ?string
     {
         if ($this->avatar) {
-            return Storage::url($this->avatar);
+            return Storage::disk('public')->url($this->avatar);
         }
         return null;
     }
 
     /**
-     * Retorna la inicial del nombre en mayúscula para el avatar por default.
-     * Uso: $user->initial → 'L'
+     * Retorna la inicial del nombre en mayúscula.
+     * Uso: $user->avatar_inicial → 'L'
      */
-    public function getInitialAttribute(): string
+    public function getAvatarInicialAttribute(): string
     {
         return strtoupper(substr($this->name, 0, 1));
     }
