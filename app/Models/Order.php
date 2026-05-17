@@ -33,9 +33,26 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    /** Alias de orderItems para compatibilidad con Filament */
+    public function items(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     /** Pago asociado a este pedido */
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    // ── Accessors ──────────────────────────────────────────────
+
+    /**
+     * Título legible del pedido para búsqueda global en Filament.
+     * Uso: $order->title → "Orden #1 — Juan Pérez"
+     */
+    public function getTitleAttribute(): string
+    {
+        return "Orden #{$this->id} — {$this->user?->name}";
     }
 }
