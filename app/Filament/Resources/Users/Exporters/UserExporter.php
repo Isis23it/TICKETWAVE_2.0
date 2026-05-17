@@ -23,9 +23,6 @@ class UserExporter extends Exporter
       ExportColumn::make('role')
         ->label('Rol'),
 
-      ExportColumn::make('email_verified_at')
-        ->label('Email verificado'),
-
       ExportColumn::make('created_at')
         ->label('Fecha de registro'),
     ];

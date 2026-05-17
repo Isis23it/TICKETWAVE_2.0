@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -30,6 +31,13 @@ class UserResource extends Resource
   protected static ?string $pluralModelLabel = 'Usuarios';
 
   protected static ?int $navigationSort = 5;
+
+  public static function canAccess(): bool
+  {
+    /** @var User|null $user */
+    $user = Auth::user();
+    return $user?->role === 'admin';
+  }
 
   public static function getNavigationGroup(): ?string
   {

@@ -11,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\Users\Exporters\UserExporter;
 use Filament\Actions\ExportAction;
+use Illuminate\Support\Facades\Auth;
 
 class UsersTable
 {
@@ -68,7 +69,9 @@ class UsersTable
       ])
       ->recordActions([
         EditAction::make()->label('Editar'),
-        DeleteAction::make()->label('Eliminar'),
+        DeleteAction::make()
+          ->label('Eliminar')
+          ->hidden(fn($record): bool => $record->id === Auth::id())
       ])
       ->toolbarActions([
         ExportAction::make()
