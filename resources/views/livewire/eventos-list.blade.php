@@ -37,7 +37,11 @@
                     <h3 class="text-white font-semibold text-lg mb-1">{{ $evento->name }}</h3>
                     <p class="text-[#8EB69B] text-sm mb-2">{{ $evento->event_date ? \Carbon\Carbon::parse($evento->event_date)->format('d M Y') : 'Fecha por confirmar' }}</p>
                     <p class="text-[#83D5AB] font-semibold mb-4">
-                        Desde ${{ number_format($evento->ticketTypes->min('price') ?? 0, 2) }}
+                        @if($evento->ticketTypes->isNotEmpty())
+                            Desde ${{ number_format($evento->ticketTypes->min('price'), 2) }}
+                        @else
+                            Precio por confirmar
+                        @endif
                     </p>
                     @if($evento->ticketTypes->sum('quantity_available') > 0)
                         <button class="w-full bg-[#8EDBB1] text-[#051F20] py-2 rounded-lg font-semibold hover:bg-[#83D5AB] transition">
@@ -55,10 +59,5 @@
                 No se encontraron eventos.
             </div>
         @endforelse
-    </div>
-
-    {{-- Paginación --}}
-    <div class="mt-8">
-        {{ $eventos->links() }}
     </div>
 </div>

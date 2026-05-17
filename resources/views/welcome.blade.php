@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TicketWave</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
 <body class="bg-[#051F20]">
@@ -35,8 +35,6 @@
         <h1 class="text-4xl md:text-5xl font-semibold text-white mb-6 max-w-lg">
             Vive experiencias inolvidables
         </h1>
-
-        
 
         <a href="#eventos" class="inline-block bg-[#8EDBB1] text-[#051F20] px-6 py-3 rounded-lg font-semibold hover:bg-[#83D5AB] transition">
             Explorar eventos
@@ -98,14 +96,5 @@
 </footer>
 
 @livewireScripts
-<script>
-    document.getElementById('hero-search').addEventListener('input', function() {
-        let value = this.value;
-        Livewire.dispatch('setBusqueda', { value: value });
-        if (value.length > 0) {
-            document.getElementById('eventos').scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-</script>
 </body>
 </html>

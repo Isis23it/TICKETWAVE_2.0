@@ -35,20 +35,21 @@ class EventosList extends Component
     }
 
     public function render()
-{
-    $eventos = Event::where('status', 'published')
-        ->when($this->busqueda, fn($q) =>
-            $q->where('name', 'like', "%{$this->busqueda}%"))
-        ->when($this->categoria, fn($q) =>
-            $q->where('category', $this->categoria))
-        ->paginate(12);
+    {
+        $eventos = Event::where('status', 'published')
+            ->when($this->busqueda, fn($q) =>
+                $q->where('name', 'like', "%{$this->busqueda}%")
+                  ->orWhere('description', 'like', "%{$this->busqueda}%"))
+            ->when($this->categoria, fn($q) =>
+                $q->where('category', $this->categoria))
+            ->with('ticketTypes')
+            ->get();
 
-    $categorias = Event::where('status', 'published')
-        ->distinct()
-        ->pluck('category')
-        ->filter();
+        $categorias = Event::where('status', 'published')
+            ->distinct()
+            ->pluck('category')
+            ->filter();
 
-    return view('livewire.eventos-list', compact('eventos', 'categorias'));
-}
-    
+        return view('livewire.eventos-list', compact('eventos', 'categorias'));
+    }
 }
