@@ -20,13 +20,19 @@ class EventForm
         return $schema
             ->components([
                 Select::make('user_id')
-                    ->label('Usuario')
+                    ->label('Organizador')
                     ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->visible(fn () => auth()->user()->role === 'admin')
+                    ->default(fn () => auth()->id())
                     ->required(),
 
                 Select::make('venue_id')
                     ->label('Recinto')
                     ->relationship('venue', 'name')
+                    ->searchable()
+                    ->preload()
                     ->required(),
 
                 TextInput::make('name')
@@ -48,7 +54,10 @@ class EventForm
 
                 FileUpload::make('image_url')
                     ->label('Imagen')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('events')
+                    ->maxSize(2048),
 
                 Select::make('status')
                     ->label('Estado')

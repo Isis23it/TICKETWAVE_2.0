@@ -7,13 +7,14 @@ use App\Filament\Resources\Events\Pages\EditEvent;
 use App\Filament\Resources\Events\Pages\ListEvents;
 use App\Filament\Resources\Events\Schemas\EventForm;
 use App\Filament\Resources\Events\Tables\EventsTable;
+use App\Filament\Resources\Events\Widgets\EventStatsWidget;
 use App\Models\Event;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use App\Filament\Resources\Events\Widgets\EventStatsWidget;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Resource de Filament para gestionar Eventos.
@@ -42,12 +43,21 @@ class EventResource extends Resource
     {
         return 'Principal';
     }
+
     public static function getWidgets(): array
-{
-    return [
-        EventStatsWidget::class,
-    ];
-}
+    {
+        return [
+            EventStatsWidget::class,
+        ];
+    }
+
+    /**
+     * Eager loading de venue y user para evitar N+1 queries.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['venue', 'user']);
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -16,12 +16,12 @@ class EventStatsWidget extends StatsOverviewWidget
     {
         $total      = Event::count();
         $publicados = Event::where('status', 'published')->count();
-        $agotados   = Event::where('status', 'cancelled')->count();
+        $cancelados = Event::where('status', 'cancelled')->count();
 
         return [
             Stat::make('TOTAL', $total),
             Stat::make('DISPONIBLES', $publicados)->color('success'),
-            Stat::make('AGOTADOS', $agotados)->color('danger'),
+            Stat::make('CANCELADOS', $cancelados)->color('danger'),
         ];
     }
 }
