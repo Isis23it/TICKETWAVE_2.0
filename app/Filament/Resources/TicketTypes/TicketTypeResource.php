@@ -67,6 +67,10 @@ class TicketTypeResource extends Resource
     ];
   }
 
+  public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+{
+    return parent::getEloquentQuery()->with(['event']);
+}
   public static function getPages(): array
   {
     return [
