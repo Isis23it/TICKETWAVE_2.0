@@ -19,15 +19,24 @@ class VenueForm
             ->components([
                 TextInput::make('name')
                     ->label('Nombre')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'El nombre del recinto es obligatorio.',
+                    ]),
 
                 TextInput::make('city')
                     ->label('Ciudad')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'La ciudad es obligatoria.',
+                    ]),
 
                 TextInput::make('state')
                     ->label('Estado')
-                    ->required(),
+                    ->required()
+                    ->validationMessages([
+                        'required' => 'El estado es obligatorio.',
+                    ]),
 
                 TextInput::make('neighborhood')
                     ->label('Colonia'),
@@ -46,7 +55,11 @@ class VenueForm
                 TextInput::make('capacity')
                     ->label('Capacidad')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->validationMessages([
+                        'required' => 'La capacidad es obligatoria.',
+                        'numeric'  => 'La capacidad debe ser un número.',
+                    ]),
 
                 TextInput::make('latitude')
                     ->label('Latitud')

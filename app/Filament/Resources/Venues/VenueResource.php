@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Resource de Filament para gestionar Recintos.
@@ -48,6 +49,14 @@ class VenueResource extends Resource
         return [
             VenueStatsWidget::class,
         ];
+    }
+
+    /**
+     * Eager loading con conteo de eventos para evitar N+1 queries.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withCount(['events']);
     }
 
     public static function form(Schema $schema): Schema

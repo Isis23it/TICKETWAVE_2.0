@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\Venues\Tables;
 
+use App\Models\Venue;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -16,6 +18,7 @@ use Filament\Tables\Table;
  *
  * Muestra nombre, ciudad, estado, capacidad y estado activo.
  * Incluye acciones de editar y eliminar con confirmación.
+ * Protege la eliminación si el recinto tiene eventos asociados.
  */
 class VenuesTable
 {
@@ -67,11 +70,36 @@ class VenuesTable
             ])
             ->recordActions([
                 EditAction::make()->label('Editar'),
-                DeleteAction::make()->label('Eliminar'),
+                DeleteAction::make()
+                    ->label('Eliminar')
+                    ->before(function (Venue $record, $action) {
+                        if ($record->events()->exists()) {
+                            Notification::make()
+                                ->title('No se puede eliminar')
+                                ->body('Este recinto tiene eventos asociados.')
+                                ->danger()
+                                ->send();
+                            $action->cancel();
+                        }
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Eliminar seleccionados'),
+                    DeleteBulkAction::make()
+                        ->label('Eliminar seleccionados')
+                        ->before(function ($records, $action) {
+                            foreach ($records as $record) {
+                                if ($record->events()->exists()) {
+                                    Notification::make()
+                                        ->title('No se puede eliminar')
+                                        ->body("El recinto '{$record->name}' tiene eventos asociados.")
+                                        ->danger()
+                                        ->send();
+                                    $action->cancel();
+                                    return;
+                                }
+                            }
+                        }),
                 ]),
             ])
             ->emptyStateHeading('Sin recintos')
