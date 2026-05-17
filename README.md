@@ -56,3 +56,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Imagen del Hero
+
+La imagen de fondo del hero (`public/hero.jpg`) no está incluida en el repositorio.
+Para que funcione la landing page, agrégala manualmente en la carpeta `public/` con el nombre `hero.jpg`.
