@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventoController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/eventos/{evento}', [EventoController::class, 'show'])->name('eventos.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
