@@ -21,26 +21,20 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($eventos as $evento)
             <div class="bg-[#0B2B26] rounded-xl overflow-hidden border border-[#235347] hover:border-[#83D5AB] transition">
-                {{-- Imagen clickeable --}}
-                <a href="{{ route('eventos.show', $evento) }}">
-                    <div class="relative">
-                        <img
-                            src="{{ $evento->image_url ? asset('storage/' . $evento->image_url) : 'https://via.placeholder.com/400x200/051F20/83D5AB?text=TicketWave' }}"
-                            alt="{{ $evento->name }}"
-                            class="w-full h-48 object-cover"
-                        />
-                        @if($evento->ticketTypes->sum('quantity_available') <= 0)
-                            <span class="absolute top-2 right-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                                Agotado
-                            </span>
-                        @endif
-                    </div>
-                </a>
+                <div class="relative">
+                    <img
+                        src="{{ $evento->image_url ?? 'https://via.placeholder.com/400x200/051F20/83D5AB?text=TicketWave' }}"
+                        alt="{{ $evento->name }}"
+                        class="w-full h-48 object-cover"
+                    />
+                    @if($evento->ticketTypes->sum('quantity_available') <= 0)
+                        <span class="absolute top-2 right-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                            Agotado
+                        </span>
+                    @endif
+                </div>
                 <div class="p-4">
-                    {{-- Nombre clickeable --}}
-                    <a href="{{ route('eventos.show', $evento) }}" class="hover:text-[#83D5AB] transition">
-                        <h3 class="text-white font-semibold text-lg mb-1">{{ $evento->name }}</h3>
-                    </a>
+                    <h3 class="text-white font-semibold text-lg mb-1">{{ $evento->name }}</h3>
                     <p class="text-[#8EB69B] text-sm mb-2">{{ $evento->event_date ? \Carbon\Carbon::parse($evento->event_date)->format('d M Y') : 'Fecha por confirmar' }}</p>
                     <p class="text-[#83D5AB] font-semibold mb-4">
                         @if($evento->ticketTypes->isNotEmpty())
@@ -50,10 +44,9 @@
                         @endif
                     </p>
                     @if($evento->ticketTypes->sum('quantity_available') > 0)
-                        <a href="{{ route('eventos.show', $evento) }}"
-                           class="block w-full bg-[#8EDBB1] text-[#051F20] py-2 rounded-lg font-semibold hover:bg-[#83D5AB] transition text-center">
-                            Ver evento
-                        </a>
+                        <button class="w-full bg-[#8EDBB1] text-[#051F20] py-2 rounded-lg font-semibold hover:bg-[#83D5AB] transition">
+                            Comprar
+                        </button>
                     @else
                         <button disabled class="w-full bg-gray-600 text-gray-400 py-2 rounded-lg font-semibold cursor-not-allowed">
                             Agotado
