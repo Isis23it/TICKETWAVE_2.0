@@ -1,7 +1,12 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+     {{-- Mensaje de redirección --}}
+    @if(request('message'))
+        <div style="background:#1a3d2e; color:#4ade80; border:1px solid #2d6a4f; border-radius:8px; padding:0.75rem 1rem; font-size:0.85rem; margin-bottom:1rem;">
+            {{ request('message') }}
+        </div>
+    @endif
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
