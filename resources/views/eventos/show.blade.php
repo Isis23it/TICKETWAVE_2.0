@@ -156,10 +156,9 @@
                                                 Comprar
                                             </button>
                                         @else
-                                            <a href="{{ route('login') }}"
-                                               onclick="sessionStorage.setItem('message', 'Inicia sesión para continuar')"
-                                               class="bg-[#8EDBB1]/10 border border-[#83D5AB] text-[#83D5AB] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#83D5AB] hover:text-[#051F20] transition inline-block">
-                                                Comprar
+                                            <a href="{{ route('login') }}?message=Inicia+sesión+para+continuar"
+                                              class="bg-[#8EDBB1]/10 border border-[#83D5AB] text-[#83D5AB] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#83D5AB] hover:text-[#051F20] transition inline-block">
+                                              Comprar
                                             </a>
                                         @endauth
                                     @else
