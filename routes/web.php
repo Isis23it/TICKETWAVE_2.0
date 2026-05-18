@@ -3,10 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventoController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/eventos/{evento}', [EventoController::class, 'show'])->name('eventos.show');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
