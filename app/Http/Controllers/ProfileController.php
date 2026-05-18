@@ -29,28 +29,31 @@ class ProfileController extends Controller
      * Si cambia el email, se resetea la verificación.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+{
+    $user = $request->user();
+    $user->name  = $request->validated()['name'];
+    $user->email = $request->validated()['email'];
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        // Subir nuevo avatar si se proporcionó
-        if ($request->hasFile('avatar')) {
-            // Borrar el avatar anterior si existía
-            if ($request->user()->avatar) {
-                Storage::disk('public')->delete($request->user()->avatar);
-            }
-            // Guardar en storage/public/avatars
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $request->user()->avatar = $path;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    if ($user->isDirty('email')) {
+        $user->email_verified_at = null;
     }
+
+    if ($request->hasFile('avatar')) {
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+        $user->avatar = $request->file('avatar')->store('avatars', 'public');
+    }
+
+    if ($request->filled('new_password')) {
+        $request->validate(['new_password' => ['min:8']]);
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
+    }
+
+    $user->save();
+
+    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+}
 
     /**
      * Elimina el avatar del usuario y vuelve a la inicial.
