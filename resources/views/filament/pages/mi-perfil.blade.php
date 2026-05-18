@@ -66,7 +66,7 @@
         </div>
 
     @else
-        <div style="max-width:32rem; margin:0 auto;">
+        <div style="width:100%;">
             <div style="border-radius:1rem; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); padding:2rem; box-shadow:0 20px 40px rgba(0,0,0,0.3);">
                 <h2 style="font-size:1.125rem; font-weight:700; color:white; margin:0 0 1.5rem 0;">Editar Perfil</h2>
 

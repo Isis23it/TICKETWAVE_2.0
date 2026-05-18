@@ -19,7 +19,7 @@ class MiPerfil extends Page implements HasForms
 {
     use InteractsWithForms;
 
-protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
     protected static ?string $navigationLabel               = 'Mi Perfil';
     protected static ?string $title                         = 'Mi Perfil';
     protected static ?string $slug                          = 'mi-perfil';
@@ -38,13 +38,14 @@ protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUse
             'name'         => $user->name,
             'email'        => $user->email,
             'new_password' => '',
-            'avatar'       => $user->avatar ? [$user->avatar] : [],
+            'avatar'       => $user->avatar ?? null,
         ]);
     }
 
     public function form(Schema $form): Schema
     {
         return $form
+            ->columns(1)
             ->components([
                 FileUpload::make('avatar')
                     ->label('Foto de perfil')
@@ -54,35 +55,26 @@ protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUse
                     ->imageEditor()
                     ->circleCropper()
                     ->maxSize(2048)
-                    ->helperText('Máximo 2MB · JPG, PNG o WEBP')
+                    ->helperText('Maximo 2MB - JPG, PNG o WEBP')
                     ->nullable(),
                 TextInput::make('name')
                     ->label('Nombre completo')
                     ->required()
-                    ->maxLength(255)
-                    ->validationMessages([
-                        'required' => 'El nombre es obligatorio.',
-                        'max'      => 'El nombre no puede superar 255 caracteres.',
-                    ]),
+                    ->maxLength(255),
                 TextInput::make('email')
-                    ->label('Correo electrónico')
+                    ->label('Correo electronico')
                     ->email()
                     ->required()
                     ->maxLength(255)
-                    ->unique(table: 'users', column: 'email', ignorable: Auth::user())
-                    ->validationMessages([
-                        'required' => 'El correo es obligatorio.',
-                        'email'    => 'Ingresa un correo electrónico válido.',
-                        'unique'   => 'Este correo ya está registrado.',
-                    ]),
+                    ->unique(table: 'users', column: 'email', ignorable: Auth::user()),
                 TextInput::make('new_password')
-                    ->label('Nueva contraseña')
+                    ->label('Nueva contrasena')
                     ->password()
                     ->revealable()
                     ->nullable()
                     ->rule(Password::min(8))
-                    ->placeholder('Déjalo vacío para no cambiarla')
-                    ->helperText('Mínimo 8 caracteres'),
+                    ->placeholder('Dejalo vacio para no cambiarla')
+                    ->helperText('Minimo 8 caracteres'),
             ])
             ->statePath('data');
     }
@@ -97,13 +89,16 @@ protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUse
         $datos = $this->form->getState();
         $user  = Auth::user();
 
-        $avatarPath = $user->avatar;
-        if (!empty($datos['avatar'])) {
-            if ($user->avatar && $user->avatar !== $datos['avatar'][0]) {
+        $avatarPath  = $user->avatar;
+        $nuevoAvatar = $datos['avatar'] ?? null;
+
+        if (!empty($nuevoAvatar)) {
+            $nuevaRuta = is_array($nuevoAvatar) ? array_values($nuevoAvatar)[0] : $nuevoAvatar;
+            if ($user->avatar && $nuevaRuta !== $user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $avatarPath = $datos['avatar'][0];
-        } elseif ($user->avatar && empty($datos['avatar'])) {
+            $avatarPath = $nuevaRuta;
+        } elseif (is_null($nuevoAvatar) && $user->avatar) {
             Storage::disk('public')->delete($user->avatar);
             $avatarPath = null;
         }
@@ -135,7 +130,7 @@ protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUse
             'name'         => $user->name,
             'email'        => $user->email,
             'new_password' => '',
-            'avatar'       => $user->avatar ? [$user->avatar] : [],
+            'avatar'       => $user->avatar ?? null,
         ]);
     }
 }

@@ -97,4 +97,11 @@ class User extends Authenticatable implements FilamentUser
     {
         return strtoupper(substr($this->name, 0, 1));
     }
+    /**
+ * Avatar que muestra Filament en el navbar.
+ */
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
+    }
 }
