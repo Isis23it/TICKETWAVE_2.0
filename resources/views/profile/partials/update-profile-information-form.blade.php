@@ -1,13 +1,49 @@
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            Información de perfil
         </h2>
-
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            Actualiza tu nombre y correo electrónico.
         </p>
     </header>
+
+    {{-- Avatar circular con inicial o foto --}}
+    <div class="mt-6 flex items-center gap-6">
+        @if(auth()->user()->avatar_url)
+            <img src="{{ auth()->user()->avatar_url }}"
+                 alt="Avatar"
+                 class="w-20 h-20 rounded-full object-cover border-2 border-gray-200">
+        @else
+            <div class="w-20 h-20 rounded-full bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold border-2 border-gray-200">
+                {{ auth()->user()->initial }}
+            </div>
+        @endif
+
+        <div class="flex flex-col gap-2">
+            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
+                <input type="file" name="avatar" accept="image/*" class="text-sm text-gray-600">
+                @error('avatar')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                <button type="submit" class="mt-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                    Subir foto
+                </button>
+            </form>
+
+            @if(auth()->user()->avatar)
+                <form method="POST" action="{{ route('profile.avatar.destroy') }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm text-red-600 hover:underline">
+                        Eliminar foto
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
@@ -16,40 +52,35 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
-
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Nombre')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
-
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('Correo electrónico')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
+                        Tu correo no está verificado.
                         <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
+                            Clic aquí para reenviar el correo de verificación.
                         </button>
                     </p>
-
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                            Se envió un nuevo enlace de verificación a tu correo.
                         </p>
                     @endif
                 </div>
             @endif
         </div>
-
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
+            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium">
+                Editar Perfil
+            </button>
             @if (session('status') === 'profile-updated')
                 <p
                     x-data="{ show: true }"
@@ -57,7 +88,16 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                >Cambios guardados.</p>
+            @endif
+            @if (session('status') === 'avatar-deleted')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-gray-600"
+                >Foto eliminada.</p>
             @endif
         </div>
     </form>
